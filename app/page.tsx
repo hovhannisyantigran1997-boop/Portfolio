@@ -1,121 +1,170 @@
 import { site, clients, newsletters, services } from "@/content/site";
 
+// Big hero line. Edit freely.
+const headline = "Content that ranks. Newsletters people open.";
+
+// Colour per card, cycles through the list.
+const tints = ["violet", "coral", "sun", "mint", "sky"];
+
+const initials = (name: string) => {
+  const words = name.replace(/^The /, "").split(/[\s—-]+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 4).toUpperCase();
+  return words.slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+};
+
 export default function Home() {
   return (
     <>
       <header className="nav wrap">
         <a href="#top" className="mark">{site.name}</a>
-        <nav>
+        <nav aria-label="Main">
           <a href="#work">Work</a>
           <a href="#newsletters">Newsletters</a>
           <a href="#about">About</a>
-          <a href="#contact">Contact</a>
         </nav>
+        <a className="btn btn-dark btn-sm" href="#contact">Get in touch</a>
       </header>
 
       <main id="top">
         {/* Hero */}
         <section className="hero wrap">
-          <p className="eyebrow">{site.role}</p>
-          <h1>{site.intro}</h1>
-          <p className="meta">{site.location}</p>
-          <div className="cta">
-            <a className="btn" href={`mailto:${site.email}`}>Work with me</a>
-            <a className="link" href="#work">See selected work →</a>
+          <div className="hero-copy">
+            <p className="pill-label">{site.role}</p>
+            <h1>{headline}</h1>
+            <p className="hero-sub">{site.intro}</p>
+            <div className="cta">
+              <a className="btn btn-dark" href={`mailto:${site.email}`}>Work with me</a>
+              <a className="btn btn-light" href="#work">Read my writing</a>
+            </div>
+            <p className="meta">{site.location}</p>
+          </div>
+
+          <div className="hero-art" aria-hidden="true">
+            <div className="inbox">
+              <div className="inbox-bar">
+                <span /><span /><span />
+                <strong>Inbox</strong>
+              </div>
+              {newsletters.slice(0, 5).map((n, i) => (
+                <div key={n.name} className="mail" style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
+                  <span className={`avatar t-${tints[i % tints.length]}`}>{initials(n.name)}</span>
+                  <span className="mail-text">
+                    <strong>{n.name}</strong>
+                    <span>{n.tagline ?? n.niche}</span>
+                  </span>
+                  {i < 2 && <span className="dot" />}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Clients */}
-        <section id="work" className="wrap section">
-          <div className="section-head">
-            <span className="num">01</span>
-            <h2>Selected clients</h2>
+        {/* Client strip */}
+        <section className="strip wrap" aria-label="Clients">
+          <p>Writing for</p>
+          <ul>
+            {clients.map((c) => <li key={c.name}>{c.name}</li>)}
+          </ul>
+        </section>
+
+        {/* Work */}
+        <section id="work" className="block wrap">
+          <div className="head">
+            <h2>Selected work</h2>
+            <p>Long-form articles for brands, written to rank in search and to be read by people.</p>
           </div>
-          <ol className="clients">
-            {clients.map((c) => (
-              <li key={c.name} className="client">
-                <div className="client-name">
+          <div className="work-grid">
+            {clients.map((c, i) => (
+              <article key={c.name} className={`work-card t-${tints[i % tints.length]}`}>
+                <div className="work-top">
+                  <span className="chip">{c.sector}</span>
                   <h3>{c.name}</h3>
-                  <span className="tag">{c.sector}</span>
                 </div>
-                <div className="client-body">
+                <div className="work-body">
                   <p>{c.summary}</p>
-                  {c.samples.length > 0 && (
+                  {c.samples.length > 0 ? (
                     <ul className="samples">
                       {c.samples.map((s) => (
-                        <li key={s.title}>
-                          <a href={s.href} target="_blank" rel="noreferrer">{s.title} ↗</a>
+                        <li key={s.href}>
+                          <a href={s.href} target="_blank" rel="noreferrer">
+                            <span>{s.title}</span>
+                            <span className="ext" aria-hidden="true">↗</span>
+                          </a>
                         </li>
                       ))}
                     </ul>
+                  ) : (
+                    <p className="muted">Samples available on request.</p>
                   )}
                 </div>
-              </li>
+              </article>
             ))}
-          </ol>
+          </div>
         </section>
 
         {/* Newsletters */}
-        <section id="newsletters" className="wrap section">
-          <div className="section-head">
-            <span className="num">02</span>
-            <h2>Newsletters I produce</h2>
+        <section id="newsletters" className="block wrap">
+          <div className="head">
+            <h2>Newsletters I write for Media Miami</h2>
+            <p>I write and produce these as part of the Media Miami team. Each one has its own voice, format, and audience.</p>
           </div>
-          <div className="grid">
-            {newsletters.map((n) => {
+          <div className="nl-grid">
+            {newsletters.map((n, i) => {
               const Card = n.href ? "a" : "div";
               return (
                 <Card
                   key={n.name}
-                  className="card"
+                  className="nl-card"
                   {...(n.href ? { href: n.href, target: "_blank", rel: "noreferrer" } : {})}
                 >
-                  {n.cadence && <span className="tag">{n.cadence}</span>}
+                  <span className={`avatar t-${tints[i % tints.length]}`}>{initials(n.name)}</span>
                   <h3>{n.name}</h3>
-                  <p>{n.tagline}</p>
+                  {n.tagline && <p>{n.tagline}</p>}
+                  <span className="chips">
+                    <span className="chip chip-soft">{n.niche}</span>
+                    {n.cadence && <span className="chip chip-soft">{n.cadence}</span>}
+                  </span>
                 </Card>
               );
             })}
           </div>
         </section>
 
-        {/* About */}
-        <section id="about" className="wrap section">
-          <div className="section-head">
-            <span className="num">03</span>
-            <h2>About</h2>
-          </div>
-          <div className="about">
+        {/* Services + About */}
+        <section id="about" className="band">
+          <div className="wrap about">
             <div>
-              {site.about.map((p, i) => (
-                <p key={i} className={i === 0 ? "lede" : undefined}>{p}</p>
-              ))}
+              <h2>About</h2>
+              {site.about.map((p, i) => <p key={i}>{p}</p>)}
             </div>
-            <aside>
-              <h4>What I do</h4>
+            <div className="services">
+              <h3>What I do</h3>
               <ul>
                 {services.map((s) => <li key={s}>{s}</li>)}
               </ul>
-            </aside>
+            </div>
           </div>
         </section>
 
         {/* Contact */}
-        <section id="contact" className="wrap section contact">
-          <p className="eyebrow">Contact</p>
-          <h2>Have a publication or content plan in mind?</h2>
-          <a className="big-link" href={`mailto:${site.email}`}>{site.email}</a>
-          <div className="socials">
-            {site.socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer">{s.label}</a>
-            ))}
+        <section id="contact" className="wrap">
+          <div className="contact">
+            <h2>Got something that needs writing?</h2>
+            <p>Tell me about your publication, blog, or launch, and what you need written.</p>
+            <div className="cta">
+              <a className="btn btn-white" href={`mailto:${site.email}`}>Email me</a>
+              {site.socials.map((s) => (
+                <a key={s.label} className="btn btn-ghost" href={s.href} target="_blank" rel="noreferrer">{s.label}</a>
+              ))}
+            </div>
+            <p className="contact-mail">{site.email}</p>
           </div>
         </section>
       </main>
 
       <footer className="wrap footer">
         <span>© {new Date().getFullYear()} {site.name}</span>
-        <a href="#top">Back to top ↑</a>
+        <span>{site.location}</span>
       </footer>
     </>
   );
