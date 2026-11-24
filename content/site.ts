@@ -8,7 +8,7 @@ export const site = {
   role: "Content Writer & Newsletter Producer",
   location: "Yerevan, Armenia · working worldwide",
   email: "hovhannisyantigran1997@gmail.com",
-  url: "https://your-domain.vercel.app",
+  url: "https://tigranhovhannisyan.vercel.app",
   intro:
     "I write SEO articles for tech and consumer brands, and newsletters for Media Miami on finance, health, manifestation, and speculative fiction.",
   about: [
