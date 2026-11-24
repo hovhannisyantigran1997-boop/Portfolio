@@ -157,7 +157,6 @@ export default function Home() {
                 <a key={s.label} className="btn btn-ghost" href={s.href} target="_blank" rel="noreferrer">{s.label}</a>
               ))}
             </div>
-            <p className="contact-mail">{site.email}</p>
           </div>
         </section>
       </main>
